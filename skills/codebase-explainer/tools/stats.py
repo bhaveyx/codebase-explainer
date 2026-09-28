@@ -3,7 +3,17 @@
 # ///
 """Track how a video was made: time per phase, agents, tokens, cost, and output stats.
 
-Run from the video project directory (the copy of template/):
+Zero-cost mode (the default): after the video is done, run this yourself in a normal
+terminal, from the video project directory. No agent is involved, so it costs nothing:
+
+  uv run <skill>/tools/stats.py report --session latest --repo <path-to-explained-repo>
+
+`--session` also accepts a transcript path. You get totals (time, agents, tokens, cost,
+video and research stats) but no per-phase breakdown. It measures the whole session, so
+make the video in a fresh session for the numbers to describe just the video.
+
+Tracked mode (opt-in, `--stats` when invoking the skill): the agent runs these as it
+works. Each call is one extra agent turn, so this adds a small cost to the run:
 
   uv run <skill>/tools/stats.py start --repo <path-to-explained-repo>
   uv run <skill>/tools/stats.py mark <phase>     # map, research, verify, script, critique,
@@ -147,7 +157,9 @@ def usage_from(files: list[Path], since: datetime) -> dict:
         "by_model": by_model,
         "total_tokens": tokens,
         "output_tokens": sum(m["output"] for m in by_model.values()),
-        "web_searches": web_searches,
+        # Claude Code's WebSearch/WebFetch are client tool calls, not API server tools.
+        "web_searches": web_searches + tools.get("WebSearch", 0),
+        "web_fetches": tools.get("WebFetch", 0),
         "tool_calls": dict(sorted(tools.items(), key=lambda kv: -kv[1])),
         "cost_usd": round(total_cost, 2),
         "cost_complete": priced,
@@ -236,11 +248,44 @@ def cmd_note(args: list[str]) -> None:
     print(f"{key}: {state['notes'][key]}")
 
 
-def cmd_report(_: list[str]) -> None:
-    state = load()
-    started = parse_ts(state["started_at"])
-    finished = datetime.now(timezone.utc)
-    session = find_session(state["marker"])
+def latest_session() -> Path | None:
+    files = list((Path.home() / ".claude" / "projects").glob("*/*.jsonl"))
+    return max(files, key=lambda p: p.stat().st_mtime) if files else None
+
+
+def first_last_timestamps(path: Path) -> tuple[datetime | None, datetime | None]:
+    first = last = None
+    for line in path.read_text(errors="ignore").splitlines():
+        try:
+            ts = json.loads(line).get("timestamp")
+        except (json.JSONDecodeError, AttributeError):
+            continue
+        if ts:
+            first = first or parse_ts(ts)
+            last = parse_ts(ts)
+    return first, last
+
+
+def cmd_report(args: list[str]) -> None:
+    opt = lambda name: args[args.index(name) + 1] if name in args else None
+    if opt("--session"):
+        # Zero-cost mode: no tracker state; derive everything from the transcript.
+        chosen = opt("--session")
+        session = latest_session() if chosen == "latest" else Path(chosen).expanduser()
+        if not session or not session.exists():
+            sys.exit("no session transcript found under ~/.claude/projects")
+        first, last = first_last_timestamps(session)
+        repo = opt("--repo")
+        state = {"started_at": (first or datetime.now(timezone.utc)).isoformat(), "marks": [], "notes": {},
+                 "repo": str(Path(repo).resolve()) if repo else None}
+        started = parse_ts(state["started_at"])
+        finished = last or datetime.now(timezone.utc)
+        print(f"using transcript {session}")
+    else:
+        state = load()
+        started = parse_ts(state["started_at"])
+        finished = datetime.now(timezone.utc)
+        session = find_session(state["marker"])
     files: list[Path] = []
     subagents = 0
     if session:
@@ -303,7 +348,7 @@ def cmd_report(_: list[str]) -> None:
     lines.append(f"- **Agents:** 1 lead agent + {subagents} subagents")
     if u:
         cost = f"${u['cost_usd']:,.2f}" + ("" if u["cost_complete"] else " (some models unpriced)")
-        lines.append(f"- **Tokens:** {u['total_tokens']:,} total ({u['output_tokens']:,} generated); {u['web_searches']} web searches")
+        lines.append(f"- **Tokens:** {u['total_tokens']:,} total ({u['output_tokens']:,} generated); {u['web_searches']} web searches, {u['web_fetches']} page fetches")
         lines.append(f"- **Cost:** {cost} at API list prices" + (f", about ${stats['cost_per_video_minute_usd']:,.2f} per minute of video" if "cost_per_video_minute_usd" in stats else ""))
     if phases:
         lines += ["", "| Phase | Time |", "|---|---|"] + [f"| {p['phase']} | {fmt_dur(p['seconds'])} |" for p in phases]

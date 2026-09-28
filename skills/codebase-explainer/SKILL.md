@@ -14,7 +14,7 @@ The point is understanding, and the video is just the format. Each phase below p
 - Run `tools/check.sh` — it verifies Node 20+, pnpm, ffmpeg, uv, Chrome, espeak-ng. Fix anything missing before researching (see [references/troubleshooting.md](references/troubleshooting.md)).
 - Ask the user, in one message: audience (new hire / founder / public), target length, which subsystems matter most, and whether history ("how we got here") is wanted. Defaults: engineers, 8–12 min, everything, yes.
 - Work in a scratch directory **outside** the target repo. Never commit video artefacts into the codebase being explained. Copy `template/` there first; research reports go in its `research/` folder.
-- Start the stats tracker from that directory: `uv run <skill>/tools/stats.py start --repo <path-to-repo>`. At the start of each phase below run `stats.py mark <phase>` (map, research, verify, script, critique, moodboard, voice, build, review, render, social), and each time you stop for the user's approval run `stats.py note checkin`. These numbers become the "how this was made" stats people share with the video.
+- **Stats are opt-in.** Only if the user asked for tracked stats (e.g. invoked with `--stats`): tell them it adds a small cost (each tracking call is an extra agent turn), then run `uv run <skill>/tools/stats.py start --repo <path-to-repo>` from that directory, and chain `stats.py mark <phase>` onto the first command of each phase (map, research, verify, script, critique, moodboard, voice, build, review, render, social) and `stats.py note checkin` onto each approval stop, so they don't add turns of their own. Otherwise don't run the stats tool at all.
 
 ## Phase 1 — Map
 
@@ -74,9 +74,9 @@ Render contact sheets of stills at line cues: `node scripts/stills.mjs review s0
 
 ## Phase 9 — Render and deliver
 
-`scripts/finalize.sh <name>` renders the MP4 and loudness-normalises to −16 LUFS. Then `node scripts/social-cut.mjs --in out/<name>.mp4` makes a 60–90 s highlight cut from the `highlight` lines (add `--vertical` for a 9:16 phone version). Then run `uv run <skill>/tools/stats.py report`, which writes `out/STATS.md` (time per phase, agents, tokens, API-equivalent cost, video and research stats) and `out/stats-card.json`, and render the shareable card with `npx remotion still src/index.ts StatsCard out/stats-card.png --props=out/stats-card.json`. Suggest the user cross-check tokens and cost with `/usage` in the same session, since the tool reads Claude Code's internal transcript format.
+`scripts/finalize.sh <name>` renders the MP4 and loudness-normalises to −16 LUFS. Then `node scripts/social-cut.mjs --in out/<name>.mp4` makes a 60–90 s highlight cut from the `highlight` lines (add `--vertical` for a 9:16 phone version). If stats were tracked, run `uv run <skill>/tools/stats.py report` (writes `out/STATS.md` with time per phase, agents, tokens, API-equivalent cost, video and research stats, plus `out/stats-card.json`) and render the card with `npx remotion still src/index.ts StatsCard out/stats-card.png --props=out/stats-card.json`. If they weren't, tell the user they can get the same totals for free (and that they describe the whole session, so a session used only for this video gives the cleanest numbers) by running, in their own terminal from the project directory, `uv run <skill>/tools/stats.py report --session latest --repo <path-to-repo>` followed by the card command. Either way, suggest cross-checking tokens and cost with `/usage`, since the tool reads Claude Code's internal transcript format.
 
-Deliver: the MP4, social cut and stats card paths, the STATS.md summary, chapter timestamps, what was verified vs inferred, anything that surprised you in the code (security issues, dead code, stale docs) — reported to the user, **not** put in the video unless asked.
+Deliver: the MP4 and social cut paths (plus STATS.md and the stats card if tracked), chapter timestamps, what was verified vs inferred, anything that surprised you in the code (security issues, dead code, stale docs) — reported to the user, **not** put in the video unless asked.
 
 ## Principles
 
