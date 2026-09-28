@@ -2,7 +2,7 @@ import React, { createContext, useContext } from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing, Img, staticFile } from "remotion";
 import { C, sans, mono, display } from "./theme";
 
-export type Line = { who: "N" | "S"; text: string; file: string; start: number; frames: number };
+export type Line = { who: "N" | "S"; text: string; file: string; start: number; frames: number; highlight?: boolean };
 export type SceneTiming = { lines: Line[]; frames: number };
 
 const CueCtx = createContext<SceneTiming>({ lines: [], frames: 0 });

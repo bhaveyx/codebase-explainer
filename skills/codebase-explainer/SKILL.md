@@ -5,14 +5,14 @@ description: Makes a narrated, animated video explaining how a codebase works an
 
 # Codebase Explainer
 
-Produce a 5–25 minute explainer video of a codebase that a new or returning engineer can watch once and come away understanding **what happens, where, and why**. It should be accurate enough to trust and entertaining enough to finish.
+Produce an explainer video (8–12 minutes by default) of a codebase that a new or returning engineer can watch once and come away understanding **what happens, where, and why**. It should be accurate enough to trust and entertaining enough to finish.
 
 The point is understanding, and the video is just the format. Each phase below protects one of two things: accuracy (nothing on screen is invented) and watchability (pacing, visuals, humour).
 
 ## Before you start
 
 - Run `tools/check.sh` — it verifies Node 20+, pnpm, ffmpeg, uv, Chrome, espeak-ng. Fix anything missing before researching (see [references/troubleshooting.md](references/troubleshooting.md)).
-- Ask the user, in one message: audience (new hire / founder / public), target length, which subsystems matter most, and whether history ("how we got here") is wanted. Defaults: engineers, 15–20 min, everything, yes.
+- Ask the user, in one message: audience (new hire / founder / public), target length, which subsystems matter most, and whether history ("how we got here") is wanted. Defaults: engineers, 8–12 min, everything, yes.
 - Work in a scratch directory **outside** the target repo. Never commit video artefacts into the codebase being explained.
 
 ## Phase 1 — Map
@@ -23,7 +23,7 @@ Read the README, top-level layout, docs/, package manifests and CI config. Produ
 
 Spawn one research agent per subsystem **plus one history agent**, all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md). Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
 
-The briefs ask for the *why* (code comments, PR descriptions, commit messages), concrete numbers (thresholds, limits, model names, timeouts), failure stories, and a worked example — these are what make a video memorable.
+The briefs ask for the *why* (code comments, PR descriptions, commit messages), concrete numbers (thresholds, limits, model names, timeouts), failure stories, turning points (what was replaced and why), absurd-but-true moments, and a worked example. These are what make a video memorable.
 
 ## Phase 3 — Verify
 
@@ -33,7 +33,13 @@ This phase is non-negotiable. A confident video with one wrong number loses the 
 
 ## Phase 4 — Script
 
-Write `script.json` following [references/scripting.md](references/scripting.md):
+Write `script.json` following [references/scripting.md](references/scripting.md) and [references/storytelling.md](references/storytelling.md):
+
+- **A mystery** posed in the first 15 seconds and paid off at the end.
+- **Chapters open with a problem**, not a name, and close with a one-sentence answer.
+- **Turning points**: tell how each part got to be this way, what it replaced and why. This is what makes the video feel personal.
+- **Comedy from true facts**, delivered deadpan. A pattern interrupt every 60–90 seconds.
+- **Voice direction** with `pause` and `speed`; mark 6–10 `highlight` lines for the social cut.
 
 - **Two voices.** A narrator explains; a skeptic interrupts with the question the viewer is thinking — usually "why?". Most of the understanding, and most of the humour, comes from the skeptic.
 - **Follow one concrete thing through the system** (one request, one sentence, one file upload). Abstractions hang off the example.
@@ -41,12 +47,14 @@ Write `script.json` following [references/scripting.md](references/scripting.md)
 - Numbers are real and on screen. Inferences are phrased as inferences. History appears where it explains the present.
 - Add `say` fields for pronunciation (acronyms, product names).
 
+Then run the **fresh-viewer critique** (brief in storytelling.md) with a subagent that has never seen the code, and revise for confusion, boredom, and jokes that fell flat.
+
 Show the user the script outline (chapter list + one line each) before generating audio.
 
 ## Phase 5 — Moodboard and storyboard
 
 1. **Moodboard** — build 3–4 contrasting style directions (palette, typography, motion character, background, one sample scene) as single still frames using the template kit; see [references/moodboard.md](references/moodboard.md). Let the user pick one. Cheap to make, and it settles taste before hours of scene work.
-2. **Storyboard** — write `STORYBOARD.md`: for every scene and line cue, what is on screen, what animates, and which sound plays. Review it for density (one idea per cue) and variety (not five diagrams in a row).
+2. **Storyboard** — write `STORYBOARD.md`: for every scene and line cue, what is on screen, what animates, and which sound plays. Give every chapter a physical metaphor before falling back on boxes and arrows, and plan 2–3 real-code moments. Review it for density (one idea per cue), variety (not five diagrams in a row), and pacing (no composition held longer than ~40 seconds).
 3. **Style guide** — fill in [references/style-guide.md](references/style-guide.md) for this video so parallel scene-builders stay consistent.
 
 ## Phase 6 — Voice
@@ -65,7 +73,7 @@ Render contact sheets of stills at line cues: `node scripts/stills.mjs review s0
 
 ## Phase 9 — Render and deliver
 
-`scripts/finalize.sh <name>` renders the MP4 and loudness-normalises to −16 LUFS. Deliver: the MP4 path, chapter timestamps, what was verified vs inferred, anything that surprised you in the code (security issues, dead code, stale docs) — reported to the user, **not** put in the video unless asked.
+`scripts/finalize.sh <name>` renders the MP4 and loudness-normalises to −16 LUFS. Then `node scripts/social-cut.mjs --in out/<name>.mp4` makes a 60–90 s highlight cut from the `highlight` lines (add `--vertical` for a 9:16 phone version). Deliver: the MP4 and social cut paths, chapter timestamps, what was verified vs inferred, anything that surprised you in the code (security issues, dead code, stale docs) — reported to the user, **not** put in the video unless asked.
 
 ## Principles
 

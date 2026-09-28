@@ -26,6 +26,11 @@ Answer:
    KNOWN_ISSUES files, or fix PRs.
 6. A worked example: one concrete input traced through every step.
 7. What changed recently, and what is in flight (open PRs) but NOT current.
+8. Turning points: what this part replaced, approaches tried and abandoned,
+   reverts, and rewrites. For each: what they believed then, what went wrong
+   or changed, what they chose instead, and the PR/commit that shows it.
+9. Absurd-but-true moments for the script's humour: reversals, ironies,
+   surprising numbers, honest code comments. Quote them exactly.
 
 Write a detailed markdown report ending with "10 key takeaways" and an ASCII
 flow diagram to {OUT_DIR}/{slug}.md. Reply with a short summary and the path.
@@ -43,6 +48,9 @@ Method: skim `git log --format='%ad %s' --date=short` by month; export
 and analyse it; `gh pr view` the largest and most pivotal PRs (titles with
 remove/kill/delete/migrate/rewrite/replace/revert/v2). Look for directories that
 exist but are empty — they are usually graveyards.
+
+For every major change, capture the story: what the old approach was, why it
+seemed right, what broke or changed, and what replaced it, quoting PR text.
 
 Deliver: a month-by-month timeline with PR numbers; named eras with what the
 design was in each and why it changed; a graveyard table (built, killed, why);

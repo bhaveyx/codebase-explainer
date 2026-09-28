@@ -16,12 +16,13 @@ It's a skill for coding agents like Claude Code, Codex, and Cursor. Point it at 
 1. It maps out the main parts of the codebase.
 2. It researches each part in parallel, along with the project's commit and pull request history, to understand not just what the code does but why.
 3. It checks the important facts against the source code, so the video doesn't state anything it can't back up.
-4. It writes a script with two voices: a narrator who explains, and a curious sidekick who asks the questions you'd probably ask.
-5. It shows you a few visual styles to choose from, then plans each scene.
-6. It records the voiceover and builds the animations.
-7. It renders the final video.
+4. It writes the script like a story, not a manual: an opening question that gets answered by the end, the turning points that shaped the code ("we used to do it this way, here's why we switched"), and the funny true moments hiding in the history. Two voices tell it: a narrator who explains, and a curious sidekick who asks the questions you'd probably ask.
+5. A second agent reads the script as a first-time viewer and points out anything confusing or boring, so it gets fixed before any video is made.
+6. It shows you a few visual styles to choose from, then plans each scene.
+7. It records the voiceover and builds the animations.
+8. It renders the final video.
 
-You get an MP4 with narration, captions, diagrams, and music, plus the research notes it was built from.
+You get an MP4 with narration, captions, diagrams, and music, a short highlight cut that's ready to share (in landscape or phone format), and the research notes it was built from.
 
 ## Install
 
@@ -62,7 +63,7 @@ The voices, sound effects, and music are all generated locally, so there are no 
 
 ## How long it takes
 
-A 20-minute video usually takes an hour or two from start to finish. Most of that is research and building scenes. The final render takes around 15 minutes on a modern laptop.
+Videos are 8–12 minutes by default, and a video that length usually takes an hour or two from start to finish. Most of that is research and building scenes. The final render takes under 10 minutes on a modern laptop.
 
 ## Privacy
 

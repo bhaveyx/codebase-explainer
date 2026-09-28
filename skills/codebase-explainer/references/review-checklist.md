@@ -16,6 +16,17 @@ Run after every batch of scenes, on stills rendered at each line cue (`node scri
 - [ ] Chapter cards clear before the first content line.
 - [ ] No scene holds a static frame for more than ~8 s without motion.
 
+## Entertainment
+- [ ] The opening question is clear within 15 seconds and answered explicitly at the end.
+- [ ] Every chapter opens with a problem and closes with a one-sentence answer.
+- [ ] At least one turning point ("what this replaced, and why") per major chapter.
+- [ ] A pattern interrupt at least every 60–90 seconds; no visual held longer than ~40 seconds.
+- [ ] Each chapter has a metaphor, not only boxes and arrows.
+- [ ] 2–3 real-code moments.
+- [ ] Jokes are true facts, delivered deadpan; nobody is mocked.
+- [ ] The fresh-viewer critique was run and its points addressed.
+- [ ] The social cut makes sense on its own when watched with no context.
+
 ## Accuracy
 - [ ] Every number on screen appears in a research report with a citation — and was verified.
 - [ ] Examples with computed values (scores, costs) are computed correctly.

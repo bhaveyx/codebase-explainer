@@ -51,6 +51,7 @@ for scene in script:
     rows = []
     for i, line in enumerate(scene["lines"]):
         voice, speed = VOICES[line["who"]]
+        speed = line.get("speed", speed)
         spoken = line.get("say", line["text"])
         digest = hashlib.sha1(f"{voice}|{speed}|{spoken}".encode()).hexdigest()[:10]
         name = f"{scene['id']}_{i:02d}_{digest}.wav"
