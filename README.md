@@ -61,6 +61,22 @@ Run `skills/codebase-explainer/tools/check.sh` to see if anything is missing.
 
 The voices, sound effects, and music are all generated locally, so there are no extra services to sign up for. The first run downloads a voice model of about 300 MB.
 
+## Tracking what a video used
+
+On a Claude subscription, you may want to know how much of your weekly limit a video took. The skill includes a small status line for Claude Code that shows your 5-hour and weekly usage and quietly records it, so the stats report can show the before and after. It runs on your machine and doesn't use any tokens. To turn it on, add this to `~/.claude/settings.json`:
+
+```json
+"statusLine": { "type": "command", "command": "<path-to-this-repo>/skills/codebase-explainer/tools/usage-statusline.sh" }
+```
+
+When the video is done, run this from the video's folder for a summary of time, agents, tokens, cost, and plan usage:
+
+```bash
+uv run <path-to-this-repo>/skills/codebase-explainer/tools/stats.py report --session latest --repo <path-to-the-repo-you-explained>
+```
+
+Usage limits are shared across your whole account, so for a clean number, avoid using Claude for other things while the video is being made.
+
 ## How long it takes
 
 Videos are 8–12 minutes by default, and a video that length usually takes an hour or two from start to finish. Most of that is research and building scenes. The final render takes under 10 minutes on a modern laptop.

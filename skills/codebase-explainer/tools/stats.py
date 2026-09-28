@@ -166,6 +166,41 @@ def usage_from(files: list[Path], since: datetime) -> dict:
     }
 
 
+USAGE_LOG = Path.home() / ".claude" / "codebase-explainer" / "usage-log.jsonl"
+
+
+def plan_usage(session_id: str | None, since: datetime, until: datetime) -> dict:
+    """Weekly and 5-hour plan usage before and after, from tools/usage-statusline.sh's log.
+
+    The percentages are account-wide, so anything else using the same account during the
+    run (other sessions, claude.ai) is included in the delta.
+    """
+    if not USAGE_LOG.exists():
+        return {}
+    rows = []
+    for line in USAGE_LOG.read_text(errors="ignore").splitlines():
+        try:
+            r = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        ts = datetime.fromtimestamp(r["ts"], tz=timezone.utc)
+        if since <= ts <= until and (session_id is None or r.get("session_id") in (None, session_id)):
+            rows.append(r)
+    if not rows:
+        return {}
+    out = {}
+    for key in ("seven_day", "five_hour"):
+        vals = [r for r in rows if r.get(key) is not None]
+        if not vals:
+            continue
+        first, last = vals[0], vals[-1]
+        entry = {"before": first[key], "after": last[key], "delta": round(last[key] - first[key], 1)}
+        if first.get(f"{key}_resets_at") != last.get(f"{key}_resets_at"):
+            entry["window_reset_during_run"] = True
+        out[key] = entry
+    return out
+
+
 def sh(cmd: list[str], cwd: str | None = None) -> str:
     try:
         return subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, check=True).stdout.strip()
@@ -329,6 +364,7 @@ def cmd_report(args: list[str]) -> None:
         "research": research_stats(),
         "repo": repo_stats(state.get("repo")),
     }
+    stats["plan_usage"] = plan_usage(session.stem if session else None, started, finished)
     if main and usage.get("cost_usd"):
         stats["cost_per_video_minute_usd"] = round(usage["cost_usd"] / (main / 60), 2)
     Path("out/stats.json").write_text(json.dumps(stats, indent=1))
@@ -349,13 +385,27 @@ def cmd_report(args: list[str]) -> None:
     if u:
         cost = f"${u['cost_usd']:,.2f}" + ("" if u["cost_complete"] else " (some models unpriced)")
         lines.append(f"- **Tokens:** {u['total_tokens']:,} total ({u['output_tokens']:,} generated); {u['web_searches']} web searches, {u['web_fetches']} page fetches")
-        lines.append(f"- **Cost:** {cost} at API list prices" + (f", about ${stats['cost_per_video_minute_usd']:,.2f} per minute of video" if "cost_per_video_minute_usd" in stats else ""))
+        pu = stats["plan_usage"]
+        if pu.get("seven_day"):
+            w = pu["seven_day"]
+            note = " (the weekly window reset during the run, so this delta is not meaningful)" if w.get("window_reset_during_run") else ""
+            lines.append(f"- **Weekly plan usage:** {w['delta']:+.1f} points ({w['before']:.0f}% → {w['after']:.0f}%){note}")
+        if pu.get("five_hour") and not pu["five_hour"].get("window_reset_during_run"):
+            f5 = pu["five_hour"]
+            lines.append(f"- **5-hour plan usage:** {f5['delta']:+.1f} points ({f5['before']:.0f}% → {f5['after']:.0f}%)")
+        lines.append(f"- **Cost:** {cost} at API list prices (what the same work would cost via the API; subscriptions are billed by plan instead)" + (f", about ${stats['cost_per_video_minute_usd']:,.2f} per minute of video" if "cost_per_video_minute_usd" in stats else ""))
     if phases:
         lines += ["", "| Phase | Time |", "|---|---|"] + [f"| {p['phase']} | {fmt_dur(p['seconds'])} |" for p in phases]
     if u.get("by_model"):
-        lines += ["", "| Model | Requests | Output tokens | Cost |", "|---|---|---|---|"]
+        lines += ["", "| Model | Requests | Input | Cache write | Cache read | Output | API-price cost |", "|---|---|---|---|---|---|---|"]
+        totals = {"requests": 0, "input": 0, "write": 0, "cache_read": 0, "output": 0}
         for model, m in sorted(u["by_model"].items(), key=lambda kv: -(kv[1]["cost_usd"] or 0)):
-            lines.append(f"| {model} | {m['requests']:,} | {m['output']:,} | " + (f"${m['cost_usd']:,.2f}" if m["cost_usd"] is not None else "unpriced") + " |")
+            write = m["cache_write_5m"] + m["cache_write_1h"]
+            for k, v in (("requests", m["requests"]), ("input", m["input"]), ("write", write), ("cache_read", m["cache_read"]), ("output", m["output"])):
+                totals[k] += v
+            cost = f"${m['cost_usd']:,.2f}" if m["cost_usd"] is not None else "unpriced"
+            lines.append(f"| {model} | {m['requests']:,} | {m['input']:,} | {write:,} | {m['cache_read']:,} | {m['output']:,} | {cost} |")
+        lines.append(f"| **total** | {totals['requests']:,} | {totals['input']:,} | {totals['write']:,} | {totals['cache_read']:,} | {totals['output']:,} | ${u['cost_usd']:,.2f} |")
     if not session:
         lines += ["", "_Token and cost data unavailable: the session transcript wasn't found under ~/.claude/projects._"]
     else:
@@ -371,6 +421,9 @@ def cmd_report(args: list[str]) -> None:
     card.append({"label": "AI agents", "value": str(1 + subagents)})
     if rs.get("citations"):
         card.append({"label": "source citations", "value": f"{rs['citations']:,}"})
+    week = stats["plan_usage"].get("seven_day")
+    if week and not week.get("window_reset_during_run"):
+        card.append({"label": "of a weekly plan limit", "value": f"{week['delta']:.0f}%"})
     if u.get("cost_usd"):
         card.append({"label": "API cost", "value": f"${u['cost_usd']:,.0f}" if u["cost_usd"] >= 10 else f"${u['cost_usd']:,.2f}"})
     repo_name = Path(state["repo"]).name if state.get("repo") else "a codebase"
