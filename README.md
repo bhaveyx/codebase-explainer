@@ -89,7 +89,7 @@ Usage limits are shared across your whole account, so for a clean number, avoid 
 
 ## How long it takes
 
-Videos are 8–12 minutes by default, and a video that length usually takes an hour or two from start to finish. Most of that is research and building scenes. The final render takes under 10 minutes on a modern laptop.
+There's no fixed length. The skill keeps each video as short as it can without leaving out anything important, so a small library might get a few minutes and a large system more. A 10-minute video usually takes an hour or two from start to finish. Most of that is research and building scenes. The final render takes under 10 minutes on a modern laptop.
 
 ## Privacy
 

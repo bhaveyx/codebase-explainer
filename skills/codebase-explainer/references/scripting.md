@@ -54,6 +54,6 @@ The skeptic asks what the viewer is thinking, at the moment they think it:
 - **Inferences sound like inferences.** "No PR states the reason, but…"
 - **In-flight work is labelled** ("an open PR proposes…"), never presented as current.
 - **One idea per line.** If a line needs two visuals, split it.
-- **~150 words per minute.** The default 8–12 minute video is ~1,200–1,800 words.
+- **~150 words per minute.** Use it to check length: if the script runs long, cut ideas the viewer won't miss rather than speeding up delivery.
 - Avoid reading file paths aloud; show them on screen instead.
 - Keep people out of it: no blaming authors, no names attached to bugs.

@@ -33,7 +33,7 @@ One strong metaphor per chapter is plenty. Keep it consistent once introduced.
 
 ## 4. Pacing
 
-- Default length 8–12 minutes. Go longer only if the user asks.
+- **Length:** there is no target. The video should be as short as it can be while still covering everything the viewer needs, and never so long that it drags. Size it to the material: list the ideas a viewer must leave with, give each one what it needs, and cut everything else. Before voicing, reread the script and ask of each line: would the viewer miss this? If not, cut it. A short video that people finish beats a thorough one they abandon.
 - No single visual composition holds for more than ~40 seconds.
 - A **pattern interrupt** every 60–90 seconds: a joke, a stamp, a skeptic reaction, a meme, a surprising true fact, a jump to real code.
 - After a dense explanation, a short breather: a one-line recap, a visual gag, or a pause.

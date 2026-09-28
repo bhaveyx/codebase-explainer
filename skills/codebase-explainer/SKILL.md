@@ -5,7 +5,7 @@ description: Makes a narrated, animated video explaining how a codebase works an
 
 # Codebase Explainer
 
-Produce an explainer video (8–12 minutes by default) of a codebase that a new or returning engineer can watch once and come away understanding **what happens, where, and why**. It should be accurate enough to trust and entertaining enough to finish.
+Produce an explainer video of a codebase that a new or returning engineer can watch once and come away understanding **what happens, where, and why**. It should be accurate enough to trust and entertaining enough to finish.
 
 The point is understanding, and the video is just the format. Each phase below protects one of two things: accuracy (nothing on screen is invented) and watchability (pacing, visuals, humour).
 
@@ -26,7 +26,7 @@ With no target, explain the repository in the current directory. **The user shou
 1. Run `<skill>/tools/check.sh`. If anything required is missing, tell the user the exact install command and stop (see [references/troubleshooting.md](references/troubleshooting.md)).
 2. Create the working directory `./<repo-name>-explainer/` next to where the user is (never inside the repo being explained), copy `<skill>/template/` into it, and make `research/` there.
 3. Get the code into `./<repo-name>-explainer/repo`: for a GitHub URL, `git clone --filter=blob:none <url> repo` (full history, lighter download); for a local path, use it in place and don't write into it.
-4. Defaults, unless the user said otherwise: an audience of engineers new to the codebase, 8–12 minutes, the whole system, history included.
+4. Defaults, unless the user said otherwise: an audience of engineers new to the codebase, the whole system, history included. There is no target length: make it as short as it can be without dropping anything the viewer needs or letting it drag (see "Length" in storytelling.md).
 - **Stats are opt-in.** Only if the user asked for tracked stats (e.g. invoked with `--stats`): tell them it adds a small cost (each tracking call is an extra agent turn), then run `uv run <skill>/tools/stats.py start --repo <path-to-repo>` from that directory, and chain `stats.py mark <phase>` onto the first command of each phase (map, research, verify, script, critique, moodboard, voice, build, review, render, social) and `stats.py note checkin` onto each `--review` stop, so they don't add turns of their own. Otherwise don't run the stats tool at all.
 
 ## Phase 1 — Map
@@ -35,7 +35,7 @@ Read the README, top-level layout, docs/, package manifests and CI config. Produ
 
 ## Phase 2 — Research (parallel)
 
-Spawn one research agent per subsystem, **one history agent, and one public-context agent**, all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md) with `{OUT_DIR}` set to the project's `research/` folder. Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
+Spawn one research agent per subsystem, **one history agent, and one public-context agent** (news, reception, rivals, talks and posts by the maintainers, and anything else from outside the code that belongs in the video), all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md) with `{OUT_DIR}` set to the project's `research/` folder. Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
 
 The briefs ask for the *why* (code comments, PR descriptions, commit messages), concrete numbers (thresholds, limits, model names, timeouts), failure stories, turning points (what was replaced and why), absurd-but-true moments, and a worked example. These are what make a video memorable.
 

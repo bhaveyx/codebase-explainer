@@ -63,14 +63,17 @@ Write to {OUT_DIR}/history.md and reply with a short summary.
 ## Public-context brief
 
 ```
-Research how {PROJECT} ({REPO_URL}) is seen outside its own code, for the
-opening of an explainer video. Use web search. Find:
+Research everything outside {PROJECT}'s own code ({REPO_URL}) that belongs in
+an explainer video about it. Use web search. Find:
 1. What it is and who makes it, in one line.
 2. Why people care right now: recent releases, news, launches, controversies,
    funding, adoption numbers (stars, users, downloads), with dates.
 3. Its rivals or predecessors, and how people compare them (forums, blog
    posts, social media): what makes people choose or switch to it.
-4. Any story that makes a strong opening question for the video.
+4. The maintainers' own explanations: launch posts, talks, docs pages, and
+   interviews that explain why it was built and why it works the way it does.
+5. Anything else a viewer would want to know that the code can't tell you.
+6. Any story that makes a strong opening question for the video.
 Every claim needs a source URL and date. Separate facts from opinion. Never
 rely on unverifiable rumours. Nothing here overrides what the code shows; if
 public claims and the code disagree, say so.

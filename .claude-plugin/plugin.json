@@ -1,7 +1,7 @@
 {
   "name": "codebase-explainer",
   "displayName": "Codebase Explainer",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Turns a codebase into a narrated video about how it works and why it was built that way.",
   "author": {
     "name": "Bhavesh Chaudhari",
