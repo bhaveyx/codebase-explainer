@@ -2,7 +2,11 @@
 
 Turn any codebase into a narrated, animated video that explains how it works and why it was built that way.
 
-It's a skill for coding agents like Claude Code, Codex, and Cursor. Point it at a repository and it researches the code and its history, double-checks what it learned, and produces a video you can watch to get up to speed.
+It's a skill for coding agents like Claude Code, Codex, and Cursor. Give it a GitHub link and it does the rest: it researches the code and its history, double-checks what it learned, and hands you a finished video.
+
+```
+/codebase-explainer https://github.com/owner/repo
+```
 
 ## Who it's for
 
@@ -14,11 +18,11 @@ It's a skill for coding agents like Claude Code, Codex, and Cursor. Point it at 
 ## What happens when you run it
 
 1. It maps out the main parts of the codebase.
-2. It researches each part in parallel, along with the project's commit and pull request history, to understand not just what the code does but why.
+2. It researches each part in parallel, along with the project's commit and pull request history, to understand not just what the code does but why. It also looks up what people are saying about the project online, to find a good opening question.
 3. It checks the important facts against the source code, so the video doesn't state anything it can't back up.
 4. It writes the script like a story, not a manual: an opening question that gets answered by the end, the turning points that shaped the code ("we used to do it this way, here's why we switched"), and the funny true moments hiding in the history. Two voices tell it: a narrator who explains, and a curious sidekick who asks the questions you'd probably ask.
 5. A second agent reads the script as a first-time viewer and points out anything confusing or boring, so it gets fixed before any video is made.
-6. It shows you a few visual styles to choose from, then plans each scene.
+6. It tries a few visual styles, picks the one that suits the project, then plans each scene.
 7. It records the voiceover and builds the animations.
 8. It renders the final video.
 
@@ -39,7 +43,13 @@ claude plugin marketplace add bhaveyx/codebase-explainer
 claude plugin install codebase-explainer@codebase-explainer
 ```
 
-Then open the repo you want explained and run `/codebase-explainer`, or just ask your agent to make an explainer video.
+Then run it with a GitHub link or a local folder:
+
+```
+/codebase-explainer https://github.com/owner/repo
+```
+
+That's all it needs. If you'd like a say along the way, add `--review` and it will check the script outline and visual style with you before building the video. You can also add plain instructions, like a target audience or length.
 
 ## Requirements
 

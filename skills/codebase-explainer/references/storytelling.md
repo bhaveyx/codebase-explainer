@@ -7,6 +7,7 @@ Accuracy makes a video trustworthy. Story makes people finish it. Apply these ru
 - The first 15 seconds pose one question the whole video answers. Good questions are surprising and specific: "Why does this project ship a command to migrate *away* from its biggest rival?", "How does a 600-line file train a GPT?", "Why did they delete the database?"
 - State it plainly, then promise the answer: "By the end, you'll know exactly why."
 - Pay it off explicitly near the end, and call back to the opening line.
+- The public-context report is the best source of hooks: why people are talking about this project right now, and what it's being compared to. Pick the question a curious outsider would actually ask, then answer it from the code.
 
 ## 2. Every chapter is question → tension → answer
 

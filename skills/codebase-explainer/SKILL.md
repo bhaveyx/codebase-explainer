@@ -9,12 +9,25 @@ Produce an explainer video (8–12 minutes by default) of a codebase that a new 
 
 The point is understanding, and the video is just the format. Each phase below protects one of two things: accuracy (nothing on screen is invented) and watchability (pacing, visuals, humour).
 
+## How it's invoked
+
+`/codebase-explainer <github-url or local path> [--review] [--stats] [anything else the user adds]`
+
+With no target, explain the repository in the current directory. **The user should not have to say anything else.** Everything below runs on its own from start to finished MP4; only stop to ask when something blocks you (the repo can't be cloned, a required tool is missing).
+
+- `--review`: pause twice for the user's approval, after the script outline and after the moodboard. Without it, make those calls yourself and keep going.
+- `--stats`: track per-phase stats as the run goes (see below).
+- Anything else the user writes (an audience, a length, an angle, a focus) overrides the defaults. Follow it, but still do all the research yourself.
+
+`<skill>` below means the directory containing this SKILL.md.
+
 ## Before you start
 
-- Run `tools/check.sh` — it verifies Node 20+, pnpm, ffmpeg, uv, Chrome, espeak-ng. Fix anything missing before researching (see [references/troubleshooting.md](references/troubleshooting.md)).
-- Ask the user, in one message: audience (new hire / founder / public), target length, which subsystems matter most, and whether history ("how we got here") is wanted. Defaults: engineers, 8–12 min, everything, yes.
-- Work in a scratch directory **outside** the target repo. Never commit video artefacts into the codebase being explained. Copy `template/` there first; research reports go in its `research/` folder.
-- **Stats are opt-in.** Only if the user asked for tracked stats (e.g. invoked with `--stats`): tell them it adds a small cost (each tracking call is an extra agent turn), then run `uv run <skill>/tools/stats.py start --repo <path-to-repo>` from that directory, and chain `stats.py mark <phase>` onto the first command of each phase (map, research, verify, script, critique, moodboard, voice, build, review, render, social) and `stats.py note checkin` onto each approval stop, so they don't add turns of their own. Otherwise don't run the stats tool at all.
+1. Run `<skill>/tools/check.sh`. If anything required is missing, tell the user the exact install command and stop (see [references/troubleshooting.md](references/troubleshooting.md)).
+2. Create the working directory `./<repo-name>-explainer/` next to where the user is (never inside the repo being explained), copy `<skill>/template/` into it, and make `research/` there.
+3. Get the code into `./<repo-name>-explainer/repo`: for a GitHub URL, `git clone --filter=blob:none <url> repo` (full history, lighter download); for a local path, use it in place and don't write into it.
+4. Defaults, unless the user said otherwise: an audience of engineers new to the codebase, 8–12 minutes, the whole system, history included.
+- **Stats are opt-in.** Only if the user asked for tracked stats (e.g. invoked with `--stats`): tell them it adds a small cost (each tracking call is an extra agent turn), then run `uv run <skill>/tools/stats.py start --repo <path-to-repo>` from that directory, and chain `stats.py mark <phase>` onto the first command of each phase (map, research, verify, script, critique, moodboard, voice, build, review, render, social) and `stats.py note checkin` onto each `--review` stop, so they don't add turns of their own. Otherwise don't run the stats tool at all.
 
 ## Phase 1 — Map
 
@@ -22,7 +35,7 @@ Read the README, top-level layout, docs/, package manifests and CI config. Produ
 
 ## Phase 2 — Research (parallel)
 
-Spawn one research agent per subsystem **plus one history agent**, all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md) with `{OUT_DIR}` set to the project's `research/` folder. Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
+Spawn one research agent per subsystem, **one history agent, and one public-context agent**, all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md) with `{OUT_DIR}` set to the project's `research/` folder. Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
 
 The briefs ask for the *why* (code comments, PR descriptions, commit messages), concrete numbers (thresholds, limits, model names, timeouts), failure stories, turning points (what was replaced and why), absurd-but-true moments, and a worked example. These are what make a video memorable.
 
@@ -50,11 +63,11 @@ Write `script.json` following [references/scripting.md](references/scripting.md)
 
 Then run the **fresh-viewer critique** (brief in storytelling.md) with a subagent that has never seen the code, and revise for confusion, boredom, and jokes that fell flat.
 
-Show the user the script outline (chapter list + one line each) before generating audio.
+With `--review`, show the user the script outline (chapter list + one line each) and wait for approval before generating audio. Otherwise, check the outline against the storytelling rules yourself and continue.
 
 ## Phase 5 — Moodboard and storyboard
 
-1. **Moodboard** — build 3–4 contrasting style directions (palette, typography, motion character, background, one sample scene) as single still frames using the template kit; see [references/moodboard.md](references/moodboard.md). Let the user pick one. Cheap to make, and it settles taste before hours of scene work.
+1. **Moodboard** — build 3–4 contrasting style directions (palette, typography, motion character, background, one sample scene) as single still frames using the template kit; see [references/moodboard.md](references/moodboard.md). With `--review`, let the user pick one. Otherwise pick the direction that best fits the codebase and the story (a terse systems library suits a different look than a playful consumer app), note why in the style guide, and continue. Cheap to make either way, and it settles taste before hours of scene work.
 2. **Storyboard** — write `STORYBOARD.md`: for every scene and line cue, what is on screen, what animates, and which sound plays. Give every chapter a physical metaphor before falling back on boxes and arrows, and plan 2–3 real-code moments. Review it for density (one idea per cue), variety (not five diagrams in a row), and pacing (no composition held longer than ~40 seconds).
 3. **Style guide** — fill in [references/style-guide.md](references/style-guide.md) for this video so parallel scene-builders stay consistent.
 

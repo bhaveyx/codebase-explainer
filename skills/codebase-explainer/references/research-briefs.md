@@ -60,6 +60,27 @@ and dates for everything; mark guesses UNVERIFIED.
 Write to {OUT_DIR}/history.md and reply with a short summary.
 ```
 
+## Public-context brief
+
+```
+Research how {PROJECT} ({REPO_URL}) is seen outside its own code, for the
+opening of an explainer video. Use web search. Find:
+1. What it is and who makes it, in one line.
+2. Why people care right now: recent releases, news, launches, controversies,
+   funding, adoption numbers (stars, users, downloads), with dates.
+3. Its rivals or predecessors, and how people compare them (forums, blog
+   posts, social media): what makes people choose or switch to it.
+4. Any story that makes a strong opening question for the video.
+Every claim needs a source URL and date. Separate facts from opinion. Never
+rely on unverifiable rumours. Nothing here overrides what the code shows; if
+public claims and the code disagree, say so.
+
+Write to {OUT_DIR}/public-context.md and reply with a short summary and the
+three strongest possible opening questions.
+```
+
+Use this for the hook and for framing only. Every claim about how the code works still comes from the code.
+
 ## After the agents return
 
 - Read every report in full. Note conflicts between reports and resolve them by reading the source yourself.
