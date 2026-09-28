@@ -1,0 +1,28 @@
+[
+  {
+    "id": "s00_intro",
+    "lines": [
+      { "who": "N", "text": "This is the codebase explainer template. Replace this script with yours." },
+      { "who": "S", "text": "So what does it actually do?" },
+      { "who": "N", "text": "It turns a codebase into a video like this one: researched, verified, narrated, and animated." }
+    ]
+  },
+  {
+    "id": "s01_pipeline",
+    "chapter": { "n": "1", "title": "The Pipeline", "sub": "nine phases, one video" },
+    "lines": [
+      { "who": "N", "text": "Chapter one. The pipeline." },
+      { "who": "N", "text": "First, map the codebase and split it into subsystems. Then research each one in parallel." },
+      { "who": "N", "text": "Verify every number against the source. Write the script. Generate the voice, which fixes the timing." },
+      { "who": "S", "text": "Why does the voice come before the visuals?" },
+      { "who": "N", "text": "Because every animation is keyed to a spoken line. Record first, and the visuals always land on the words." }
+    ]
+  },
+  {
+    "id": "s02_outro",
+    "lines": [
+      { "who": "N", "text": "Accuracy over polish. Explain the why, not the file tree." },
+      { "who": "S", "text": "Okay. Let's make one." }
+    ]
+  }
+]

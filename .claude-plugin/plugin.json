@@ -1,0 +1,21 @@
+{
+  "name": "codebase-explainer",
+  "displayName": "Codebase Explainer",
+  "version": "0.1.0",
+  "description": "Turns a codebase into a narrated video about how it works and why it was built that way.",
+  "author": {
+    "name": "Bhavesh Chaudhari",
+    "url": "https://github.com/bhaveyx"
+  },
+  "homepage": "https://github.com/bhaveyx/codebase-explainer",
+  "repository": "https://github.com/bhaveyx/codebase-explainer",
+  "license": "MIT",
+  "keywords": [
+    "onboarding",
+    "architecture",
+    "documentation",
+    "video",
+    "remotion",
+    "explainer"
+  ]
+}

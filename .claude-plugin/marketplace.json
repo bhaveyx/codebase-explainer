@@ -1,0 +1,15 @@
+{
+  "name": "codebase-explainer",
+  "description": "A skill that turns a codebase into an explainer video.",
+  "owner": {
+    "name": "Bhavesh Chaudhari",
+    "url": "https://github.com/bhaveyx"
+  },
+  "plugins": [
+    {
+      "name": "codebase-explainer",
+      "source": "./",
+      "description": "Researches a repo and its history, checks every claim against the source, and makes a narrated video about how the system works and why."
+    }
+  ]
+}
