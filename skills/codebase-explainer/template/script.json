@@ -4,18 +4,16 @@
     "lines": [
       {
         "who": "N",
-        "text": "This is the codebase explainer template. Replace this script with yours.",
-        "highlight": true
+        "text": "This is the codebase explainer template. Replace this script with yours."
       },
       {
         "who": "S",
-        "text": "So what does it actually do?",
+        "text": "So if I point it at a repo I've never seen, what do I actually get back?",
         "speed": 1.12
       },
       {
         "who": "N",
         "text": "It turns a codebase into a video like this one: researched, verified, narrated, and animated.",
-        "highlight": true,
         "pause": 0.6
       }
     ]
@@ -42,13 +40,12 @@
       },
       {
         "who": "S",
-        "text": "Why does the voice come before the visuals?",
+        "text": "Hang on, why record the voice before building any of the visuals?",
         "speed": 1.1
       },
       {
         "who": "N",
         "text": "Because every animation is keyed to a spoken line. Record first, and the visuals always land on the words.",
-        "highlight": true,
         "pause": 0.8
       }
     ]

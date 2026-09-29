@@ -26,7 +26,7 @@ It's a skill for coding agents like Claude Code, Codex, and Cursor. Give it a Gi
 7. It records the voiceover and builds the animations.
 8. It renders the final video.
 
-You get an MP4 with narration, captions, diagrams, and music, a short highlight cut that's ready to share (in landscape or phone format), and the research notes it was built from. You also get a summary of how the video was made: how long it took, how many agents worked on it, and what it cost, plus a stats card image you can post alongside it.
+You get an MP4 with narration, captions, diagrams, and music, and the research notes it was built from. You also get a summary of how the video was made: how long it took, how many agents worked on it, and what it cost, plus a stats card image you can post alongside it.
 
 ## Install
 

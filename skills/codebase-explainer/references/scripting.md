@@ -13,7 +13,7 @@
       { "who": "N", "text": "Chapter two. Storage." },
       { "who": "N", "text": "Every write lands in a per-tenant SQLite file first." },
       { "who": "S", "text": "Why not one big database?", "speed": 1.1 },
-      { "who": "N", "text": "They tried that. For a year.", "pause": 0.8, "highlight": true },
+      { "who": "N", "text": "They tried that. For a year.", "pause": 0.8 },
       { "who": "N", "text": "One noisy tenant slowed everyone else down, so they split it." }
     ]
   }
@@ -24,29 +24,26 @@
 - `text` is what the captions show; `say` (optional) is what TTS speaks — use it for pronunciation (`"SQLite"` → `"sequel-light"`, `"HyDE"` → `"hide"`, acronyms spelled out).
 - `speed` (optional) overrides the voice's default speed for that line (0.92–1.15 is the useful range).
 - `pause` (optional) adds that many seconds of silence after the line, before the next one. Use it before reveals and after punchlines.
-- `highlight` (optional) marks the line for the social cut (`scripts/social-cut.mjs`).
 - A scene with `chapter` shows a chapter card while its first line (the spoken title) plays.
 
 ## Structure that works
 
-Read [storytelling.md](storytelling.md) first; it covers the mystery, metaphors, pacing, comedy, the skeptic's arc, voice direction, and turning points.
+See [storytelling.md](storytelling.md) for the reasoning. A shape that works for most codebases:
 
-1. **Cold open (≤30 s)** — a few striking numbers about the codebase, then the question the video answers.
-2. **The whole machine** — every subsystem on one screen, plus where it runs.
-3. **Chapters** following one concrete thing through the system, in the order it flows.
-4. **History** where it explains the present ("to understand today's design, meet the one that died").
+1. **Opening (under 30 s)**: what the project is, why it's worth watching, and what the viewer will understand by the end.
+2. **The whole machine**: every major part on one screen, plus where it runs.
+3. **Chapters**, one per major part, in the order data or control flows through the system. Plain names. Each opens by saying what the part is for.
+4. **History** where it explains the present.
 5. **Cost / trade-offs** chapter if relevant.
-6. **Year-in-review / graveyard** (fun, optional).
-7. **Recap**: the journey in one breath, then the 3–5 principles that keep recurring.
+6. **Recap**: the journey in one breath, then the few ideas that keep coming back.
 
-## The skeptic
+## The companion
 
-The skeptic asks what the viewer is thinking, at the moment they think it:
+The second voice is a companion watching alongside the viewer. The template keeps them on screen the whole time, so they don't need to speak often to feel present.
 
-- "Why not just …?" before every non-obvious design choice
-- "Wait, didn't we use something else last month?" before history
-- "What stops X from …?" before a safeguard
-- Short, conversational, a little cheeky. 1 skeptic line per ~5 narrator lines.
+- They ask what a viewer would genuinely wonder at that moment, as a natural sentence: "Hang on, if nothing ever resets, doesn't the conversation just grow forever?" rather than "Why?".
+- A few per chapter at most. Some chapters need none.
+- The narrator answers and lands the key ideas. The companion can put it in their own words at the end, once they've understood.
 
 ## Rules
 

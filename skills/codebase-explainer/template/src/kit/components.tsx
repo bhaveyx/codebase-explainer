@@ -2,7 +2,7 @@ import React, { createContext, useContext } from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing, Img, staticFile } from "remotion";
 import { C, sans, mono, display } from "./theme";
 
-export type Line = { who: "N" | "S"; text: string; file: string; start: number; frames: number; highlight?: boolean };
+export type Line = { who: "N" | "S"; text: string; file: string; start: number; frames: number };
 export type SceneTiming = { lines: Line[]; frames: number };
 
 const CueCtx = createContext<SceneTiming>({ lines: [], frames: 0 });
@@ -182,46 +182,66 @@ export const ChapterCard: React.FC<{ n: string; title: string; sub?: string; col
   );
 };
 
-/** Caption bar showing the currently spoken line; the skeptic's lines render as a speech bubble with an animated face. */
+/**
+ * Narrator captions at the bottom, plus the companion: always on screen in the bottom-right,
+ * looking toward the content, with a speech bubble that stays up for the whole of their line.
+ */
 export const Captions: React.FC = () => {
   const frame = useCurrentFrame();
   const { lines } = useScene();
   const cur = lines.find((l) => frame >= l.start && frame < l.start + l.frames + 6);
-  if (!cur) return null;
-  const local = frame - cur.start;
-  const words = cur.text.split(" ");
-  const spoken = Math.floor((local / cur.frames) * words.length * 1.05);
-  const inP = lerp(local, 0, 6);
-  if (cur.who === "S") {
-    const talking = local < cur.frames;
-    return (
-      <div style={{ position: "absolute", right: 60, bottom: 60, display: "flex", alignItems: "flex-end", gap: 20, opacity: inP, transform: `translateY(${(1 - inP) * 30}px)` }}>
-        <div style={{ maxWidth: 820, background: C.yellow, color: "#1a1400", fontFamily: sans, fontWeight: 600, fontSize: 32, lineHeight: 1.3, padding: "20px 28px", borderRadius: "28px 28px 6px 28px", boxShadow: "0 12px 40px #0009" }}>{cur.text}</div>
-        <Skeptic talking={talking} />
-      </div>
-    );
-  }
+  const companionLine = lines.find((l) => l.who === "S" && frame >= l.start - 4 && frame < l.start + l.frames + 20);
+  const narrator = cur && cur.who === "N" ? cur : undefined;
+  const talking = Boolean(companionLine && frame >= companionLine.start && frame < companionLine.start + companionLine.frames);
   return (
-    <div style={{ position: "absolute", left: 0, right: 0, bottom: 44, display: "flex", justifyContent: "center", opacity: inP }}>
-      <div style={{ maxWidth: 1500, textAlign: "center", fontFamily: sans, fontWeight: 500, fontSize: 30, lineHeight: 1.4, background: "#000a", padding: "10px 24px", borderRadius: 14 }}>
+    <>
+      {narrator && <NarratorCaption line={narrator} frame={frame} />}
+      <div style={{ position: "absolute", right: 56, bottom: 48, display: "flex", alignItems: "flex-end", gap: 18 }}>
+        {companionLine && <CompanionBubble line={companionLine} frame={frame} />}
+        <Skeptic talking={talking} lookAtContent={!companionLine} size={112} />
+      </div>
+    </>
+  );
+};
+
+const NarratorCaption: React.FC<{ line: Line; frame: number }> = ({ line, frame }) => {
+  const local = frame - line.start;
+  const words = line.text.split(" ");
+  const spoken = Math.floor((local / line.frames) * words.length * 1.05);
+  return (
+    <div style={{ position: "absolute", left: 0, right: 0, bottom: 44, display: "flex", justifyContent: "center", opacity: lerp(local, 0, 6) }}>
+      <div style={{ maxWidth: 1300, textAlign: "center", fontFamily: sans, fontWeight: 500, fontSize: 30, lineHeight: 1.4, background: "#000a", padding: "10px 24px", borderRadius: 14 }}>
         {words.map((w, i) => <span key={i} style={{ color: i < spoken ? C.text : C.faint }}>{w} </span>)}
       </div>
     </div>
   );
 };
 
-export const Skeptic: React.FC<{ talking?: boolean; size?: number }> = ({ talking = false, size = 130 }) => {
+const CompanionBubble: React.FC<{ line: Line; frame: number }> = ({ line, frame }) => {
+  const inP = lerp(frame, line.start - 4, line.start + 6);
+  const outP = lerp(frame, line.start + line.frames + 8, line.start + line.frames + 20, 1, 0);
+  const o = Math.min(inP, outP);
+  return (
+    <div style={{ maxWidth: 760, marginBottom: 40, background: C.yellow, color: "#1a1400", fontFamily: sans, fontWeight: 600, fontSize: 30, lineHeight: 1.3, padding: "18px 26px", borderRadius: "26px 26px 6px 26px", boxShadow: "0 12px 40px #0009", opacity: o, transform: `translateY(${(1 - inP) * 16}px) scale(${0.96 + 0.04 * inP})`, transformOrigin: "bottom right" }}>
+      {line.text}
+    </div>
+  );
+};
+
+/** The companion's face. Blinks and bobs while idle, glances at the content, and moves its mouth while talking. */
+export const Skeptic: React.FC<{ talking?: boolean; size?: number; lookAtContent?: boolean }> = ({ talking = false, size = 130, lookAtContent = false }) => {
   const frame = useCurrentFrame();
   const mouth = talking ? 6 + Math.abs(Math.sin(frame / 2.2)) * 16 : 4;
-  const bob = Math.sin(frame / 8) * 4;
-  const blink = frame % 90 < 4 ? 0.1 : 1;
+  const bob = Math.sin(frame / 18) * 3;
+  const blink = frame % 110 < 4 ? 0.1 : 1;
+  const look = lookAtContent ? -5 : 0;
   return (
-    <svg width={size} height={size} viewBox="0 0 130 130" style={{ transform: `translateY(${bob}px)`, flexShrink: 0 }}>
+    <svg width={size} height={size} viewBox="0 0 130 130" style={{ transform: `translateY(${bob}px)`, flexShrink: 0, filter: "drop-shadow(0 8px 20px #0008)" }}>
       <circle cx={65} cy={65} r={60} fill={C.yellow} />
-      <ellipse cx={45} cy={55} rx={9} ry={11 * blink} fill="#1a1400" />
-      <ellipse cx={85} cy={55} rx={9} ry={11 * blink} fill="#1a1400" />
-      <path d="M 30 36 L 58 42" stroke="#1a1400" strokeWidth={6} strokeLinecap="round" />
-      <path d="M 74 38 L 100 30" stroke="#1a1400" strokeWidth={6} strokeLinecap="round" />
+      <ellipse cx={45 + look} cy={55} rx={9} ry={11 * blink} fill="#1a1400" />
+      <ellipse cx={85 + look} cy={55} rx={9} ry={11 * blink} fill="#1a1400" />
+      <path d={talking ? "M 30 34 L 58 38" : "M 30 38 L 58 40"} stroke="#1a1400" strokeWidth={6} strokeLinecap="round" />
+      <path d={talking ? "M 74 36 L 100 28" : "M 74 40 L 100 36"} stroke="#1a1400" strokeWidth={6} strokeLinecap="round" />
       <ellipse cx={68} cy={90} rx={14} ry={mouth / 2} fill="#1a1400" />
     </svg>
   );

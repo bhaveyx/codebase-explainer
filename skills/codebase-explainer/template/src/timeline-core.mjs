@@ -8,7 +8,7 @@ const CHAPTER_HOLD = 30;
 
 /**
  * Lays scenes and lines out on the frame timeline from measured voice durations.
- * @param {{id: string, chapter?: object, lines: {who: "N"|"S", text: string, pause?: number, highlight?: boolean}[]}[]} script
+ * @param {{id: string, chapter?: object, lines: {who: "N"|"S", text: string, pause?: number}[]}[]} script
  * @param {Record<string, {file: string, sec: number}[]>} timing
  */
 export function buildTimeline(script, timing, fps = 30) {
@@ -22,7 +22,7 @@ export function buildTimeline(script, timing, fps = 30) {
       const start = t;
       t += frames + (l.who === "S" || sc.lines[i + 1]?.who === "S" ? SKEPTIC_GAP : GAP) + Math.round((l.pause ?? 0) * fps);
       if (i === 0 && sc.chapter) t += CHAPTER_HOLD;
-      return { who: l.who, text: l.text, file, start, frames, highlight: Boolean(l.highlight) };
+      return { who: l.who, text: l.text, file, start, frames };
     });
     const frames = t + TAIL;
     const scene = { id: sc.id, chapter: sc.chapter, lines, frames, from };

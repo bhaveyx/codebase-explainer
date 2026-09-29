@@ -14,6 +14,8 @@ anything inferred as UNVERIFIED.
 Your area: {SUBSYSTEM} — main code in {PATHS}.
 
 Answer:
+0. The core concepts a user of this part must understand (names as used in
+   the docs and code), each explained in two or three plain sentences.
 1. The end-to-end flow: what triggers it, every step in order, inputs/outputs,
    with the exact names used in code.
 2. Why it is built this way — from code comments, docs, commit messages, and PR
@@ -27,10 +29,9 @@ Answer:
 6. A worked example: one concrete input traced through every step.
 7. What changed recently, and what is in flight (open PRs) but NOT current.
 8. Turning points: what this part replaced, approaches tried and abandoned,
-   reverts, and rewrites. For each: what they believed then, what went wrong
-   or changed, what they chose instead, and the PR/commit that shows it.
-9. Absurd-but-true moments for the script's humour: reversals, ironies,
-   surprising numbers, honest code comments. Quote them exactly.
+   reverts, and rewrites that shaped today's design. For each: what they
+   believed then, what went wrong or changed, what they chose instead, and
+   the PR/commit that shows it. Skip incidents that didn't change the design.
 
 Write a detailed markdown report ending with "10 key takeaways" and an ASCII
 flow diagram to {OUT_DIR}/{slug}.md. Reply with a short summary and the path.

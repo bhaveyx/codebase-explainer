@@ -17,7 +17,7 @@ works. Each call is one extra agent turn, so this adds a small cost to the run:
 
   uv run <skill>/tools/stats.py start --repo <path-to-explained-repo>
   uv run <skill>/tools/stats.py mark <phase>     # map, research, verify, script, critique,
-                                                  # moodboard, voice, build, review, render, social
+                                                  # moodboard, voice, build, review, render
   uv run <skill>/tools/stats.py note checkin      # count a pause for the user's approval
   uv run <skill>/tools/stats.py report            # writes out/stats.json, out/STATS.md, out/stats-card.json
   npx remotion still src/index.ts StatsCard out/stats-card.png --props=out/stats-card.json
@@ -52,7 +52,7 @@ PRICES = {
     "claude-haiku-4": (1.0, 1.25, 2.0, 0.1, 5.0),
 }
 WEB_SEARCH_USD = 0.01  # $10 per 1,000 searches
-PHASES = ["map", "research", "verify", "script", "critique", "moodboard", "voice", "build", "review", "render", "social"]
+PHASES = ["map", "research", "verify", "script", "critique", "moodboard", "voice", "build", "review", "render"]
 
 
 def now() -> str:
@@ -256,8 +256,7 @@ def script_stats() -> dict:
     script = json.loads(Path("script.json").read_text())
     lines = [l for sc in script for l in sc["lines"]]
     return {"scenes": len(script), "chapters": sum(1 for sc in script if sc.get("chapter")), "lines": len(lines),
-            "words": sum(len(l["text"].split()) for l in lines), "skeptic_lines": sum(1 for l in lines if l["who"] == "S"),
-            "highlights": sum(1 for l in lines if l.get("highlight"))}
+            "words": sum(len(l["text"].split()) for l in lines), "skeptic_lines": sum(1 for l in lines if l["who"] == "S")}
 
 
 def cmd_start(args: list[str]) -> None:
@@ -347,7 +346,7 @@ def cmd_report(args: list[str]) -> None:
     for p in sorted(Path("out").glob("*.mp4")):
         if not p.name.endswith("-raw.mp4"):
             videos[p.name] = duration(p)
-    main = next((d for n, d in videos.items() if "social" not in n), None)
+    main = next(iter(videos.values()), None)
 
     stats = {
         "started_at": state["started_at"],
@@ -373,9 +372,6 @@ def cmd_report(args: list[str]) -> None:
     lines = ["# How this video was made", ""]
     if main:
         lines.append(f"- **Video:** {fmt_dur(main)} long, {s.get('chapters', 0)} chapters, {s.get('words', 0):,} words of script")
-    for n, d in videos.items():
-        if "social" in n and d:
-            lines.append(f"- **Social cut:** {fmt_dur(d)} ({n})")
     lines.append(f"- **Time to make:** {fmt_dur(stats['wall_clock_seconds'])} start to finish, with {stats['user_checkins']} check-ins from a human")
     if r:
         lines.append(f"- **Codebase:** {r.get('lines_of_code', 0):,} lines of code in {r.get('files', 0):,} files, {r.get('commits') or 0:,} commits (at {r.get('head')})")

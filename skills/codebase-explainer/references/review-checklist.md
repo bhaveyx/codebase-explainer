@@ -16,16 +16,20 @@ Run after every batch of scenes, on stills rendered at each line cue (`node scri
 - [ ] Chapter cards clear before the first content line.
 - [ ] No scene holds a static frame for more than ~8 s without motion.
 
-## Entertainment
-- [ ] The opening question is clear within 15 seconds and answered explicitly at the end.
-- [ ] Every chapter opens with a problem and closes with a one-sentence answer.
-- [ ] At least one turning point ("what this replaced, and why") per major chapter.
-- [ ] A pattern interrupt at least every 60–90 seconds; no visual held longer than ~40 seconds.
-- [ ] Each chapter has a metaphor, not only boxes and arrows.
-- [ ] 2–3 real-code moments.
-- [ ] Jokes are true facts, delivered deadpan; nobody is mocked.
+## Does it teach?
+- [ ] Watching it, could a newcomer now explain how the system works, part by part?
+- [ ] Every core concept of the project is explained (check against the README and docs), in proportion to its importance.
+- [ ] Chapter names say plainly what each chapter covers, and each chapter starts by saying what the part is for.
+- [ ] The chapters follow the order things flow through the system.
+- [ ] Every incident or anecdote explains a design decision; anything that's just trivia is gone.
+- [ ] A worked example, if there is one, is carried through to its result.
+- [ ] The opening says why this is worth watching, and the video delivers on it.
+- [ ] The companion's questions are ones a viewer would really ask, in full sentences, and not too frequent.
 - [ ] The fresh-viewer critique was run and its points addressed.
-- [ ] The social cut makes sense on its own when watched with no context.
+
+## Watchability
+- [ ] No stretch feels slow, and nothing is held long without something new happening on screen.
+- [ ] Humour, where there is some, comes from the explanation and doesn't pull away from it.
 
 ## Accuracy
 - [ ] Every number on screen appears in a research report with a citation — and was verified.

@@ -20,9 +20,10 @@
 | Recap | Chips for each verb of the journey lighting up in sync with the narration | `lerp` per chip |
 
 ## Humour that lands in technical videos
-- A meme template once per chapter, captioned with the actual situation (e.g. expanding-brain for increasingly clever stages of an algorithm; "this is fine" for a known incident; distracted-boyfriend for dependency churn).
-- The skeptic's face reacting — it talks when the skeptic line plays.
-- Stamps for punchlines ("DEPRECATED", "SHIPPED ON A FRIDAY").
-- Graveyard of removed features.
+Use these when they fit the explanation, not to fill a quota:
+- A meme template that sums up an idea the video just explained (expanding-brain for increasingly clever stages of an algorithm; distracted-boyfriend for a dependency swap the video explains).
+- The companion's reactions: it's on screen the whole time, so a look or a short remark lands naturally.
+- A stamp on a real turning point ("DEPRECATED", "REWRITTEN").
+- A graveyard of removed features, when their removal explains today's design.
 
 Meme images are not bundled (copyright). Download templates yourself (e.g. from imgflip) into `public/img/` and position captions with `MemeTemplate` labels (percent coordinates).

@@ -1,104 +1,80 @@
-# Storytelling
+# Making it clear, and making it good to watch
 
-Accuracy makes a video trustworthy. Story makes people finish it. Apply these rules while scripting (Phase 4) and storyboarding (Phase 5).
+The job is simple to state: after watching, the viewer should be able to explain how this system works and why it's built the way it is. Everything else, including the humour, serves that. These are guidelines, not rules. Use judgment; the best video for a tiny CLI tool looks nothing like the best video for a distributed database.
 
-## 1. A mystery that pays off
+## Learn from the best explainers
 
-- The first 15 seconds pose one question the whole video answers. Good questions are surprising and specific: "Why does this project ship a command to migrate *away* from its biggest rival?", "How does a 600-line file train a GPT?", "Why did they delete the database?"
-- State it plainly, then promise the answer: "By the end, you'll know exactly why."
-- Pay it off explicitly near the end, and call back to the opening line.
-- The public-context report is the best source of hooks: why people are talking about this project right now, and what it's being compared to. Pick the question a curious outsider would actually ask, then answer it from the code.
+- **ByteByteGo** is the closest to what we make: it says what a system is, then animates a request moving through each component in order, with plain headings. Clarity first.
+- **3Blue1Brown** carries one concrete example all the way through and makes the visual *be* the explanation. Its little student characters stay on screen and ask real questions at the moment of confusion.
+- **Fireship** goes: what it is, how it works, a glimpse of real code, why it matters. Jokes and memes season the explanation; they never replace it.
+- **Kurzgesagt** keeps one clear arc, dense but readable visuals, and warmth without gimmicks.
 
-## 2. Every chapter is question → tension → answer
+What they share: the structure follows the thing being explained, and entertainment rides on top of understanding instead of competing with it.
 
-- Open a chapter with the problem it solves, not its name. Not "Chapter 3: Memory" but "Chapter 3. How do you make an agent remember you… without it remembering everything?"
-- Show what goes wrong without the mechanism (the stakes), then reveal how the code solves it.
-- End the chapter on the answer, stated in one sentence the viewer could repeat to a friend.
+## Structure
 
-## 3. A metaphor for every concept
+A shape that works for most codebases (adapt it freely):
 
-Before reaching for boxes and arrows, find a physical metaphor and storyboard it:
+1. **Opening (under 30 s).** Why this is worth ten minutes: what the project is, why people care, and what the viewer will understand by the end. A promise to explain beats a shocking statistic. If the public-context research found a genuinely interesting outside angle (a rivalry, a migration, a big launch), it can frame the opening, as long as the video then delivers the explanation.
+2. **The whole machine.** Every major part on one screen and how they connect. This is the map the rest of the video fills in.
+3. **One chapter per major part, in the order data or control flows through the system.** Explain what the part is before anything clever: what it does, how it does it, the key numbers, and why it's designed that way.
+4. **History where it explains the present.** "It used to work like X; that caused Y; so now it's Z" is one of the most satisfying things a viewer can learn. The "in retrospect" moments, when a team changed its mind, make a video feel personal.
+5. **Recap.** The journey in one breath, and the few ideas that keep coming back.
 
-| Concept | Metaphor |
-|---|---|
-| Buffering / batching | a bucket filling to a line, then tipping |
-| Retries / fallbacks | a relay race where a runner hands the baton to a backup |
-| Search strategies | detectives each following a different clue |
-| Background maintenance | sleep, a janitor's night shift, pruning a garden |
-| Rate limits / budgets | a meter running, a fuel gauge |
-| Pipelines | an assembly line, a kitchen passing plates |
-| Caching | a sticky note on the fridge vs walking to the store |
+**Chapter names are plain and descriptive:** "The Gateway", "Memory and Skills", "Talking to Model Providers", "Tools and Sandboxing". Never a riddle, a pun, or a buzzword ("The Front Desk", "Forty-Seven Dialects", "The Narrow Waist"). The viewer should know what they're about to learn before the chapter starts. Each chapter should open by saying what the part is and what it's for, then go deeper.
 
-One strong metaphor per chapter is plenty. Keep it consistent once introduced.
+## Coverage comes first
 
-## 4. Pacing
+Before writing, list the concepts a user or contributor of this project must understand. The README, docs, and the project's own vocabulary tell you (for an agent framework that might be its identity file, skills, memory, subagents, tools; for a database, storage, indexing, replication). Every one of them gets explained, in proportion to its importance. A fun detail about a minor part never takes the place of a core concept.
 
-- **Length:** there is no target. The video should be as short as it can be while still covering everything the viewer needs, and never so long that it drags. Size it to the material: list the ideas a viewer must leave with, give each one what it needs, and cut everything else. Before voicing, reread the script and ask of each line: would the viewer miss this? If not, cut it. A short video that people finish beats a thorough one they abandon.
-- No single visual composition holds for more than ~40 seconds.
-- A **pattern interrupt** every 60–90 seconds: a joke, a stamp, a skeptic reaction, a meme, a surprising true fact, a jump to real code.
-- After a dense explanation, a short breather: a one-line recap, a visual gag, or a pause.
-- Vary energy between chapters: fast and punchy, then slow and clear.
+If you follow a worked example through the system, carry it to the end and show the result. An example that is dropped halfway leaves the viewer hanging.
 
-## 5. Comedy comes from true things
+## Incidents and anecdotes
 
-Don't write jokes. Find them. The research already contains them:
+A bug, outage, or reversal belongs in the video when it explains the design: it caused a change, and the change is what the viewer is learning about. Tell it as cause and effect in a sentence or two. Anecdotes that are merely amusing, unrelated to how the system works, are trivia; leave them out, however good they are. A video made of trivia is fun for a minute and leaves the viewer knowing nothing.
 
-- Reversals: a feature renamed twice in one week; a model swapped out and later swapped back in.
-- Irony: a "temporary" flag still set two years later; a safety check that caused the outage.
-- Scale: absurd numbers (16,000 PRs in one release, a PR that deletes more than it adds).
-- Graveyards: things built, celebrated, and deleted.
-- Honest code comments ("this is a hack", "don't touch this").
+## Humour
 
-Deliver them deadpan. Understatement beats exclamation marks. Never mock people; laugh at situations.
+Humour is welcome and makes the video easier to watch, but it isn't a quota. It works best when it comes from the explanation itself: an understatement, a true detail that's funny in context, a well-placed meme template, the companion's reaction. Never mock people. If a joke needs a detour away from the explanation, skip it.
 
-## 6. The skeptic has an arc
+## The companion
 
-- Starts confused or suspicious ("this sounds overengineered").
-- Asks the question the viewer is thinking, at the moment they think it.
-- Once per video, catches the narrator out or makes a sharp point the narrator concedes.
-- Ends convinced, ideally by repeating the core idea in their own words.
-- Running gags: one recurring bit (a catchphrase, a worry that keeps coming back) paid off in the finale.
+The skeptic is a companion who stays on screen, not a voice that pops in and out:
 
-## 7. Voice direction
+- They're visible throughout (the template keeps them in the corner, reacting), so they feel like someone watching alongside the viewer.
+- They speak when a viewer would genuinely be confused or curious, in full natural sentences ("Hang on, if the prompt never changes, how does it learn anything new mid-conversation?"), not three-word interjections.
+- Fewer, better questions: a handful per chapter at most, and some chapters need none.
+- The narrator delivers the answers and the payoff. The companion can summarise at the end in their own words, once they've got it.
 
-Text-to-speech sounds flat unless the script is written for it:
+## Visuals
 
-- Short sentences at dramatic moments. Longer ones for calm explanation.
-- Use `pause` (seconds of silence after the line) before big reveals and after punchlines: 0.6–1.2 s.
-- Use `speed` to vary delivery: 0.92–0.97 for weighty lines, 1.08–1.15 for rapid-fire lists and excited asides.
-- Put the key word last in the sentence; that's where emphasis lands naturally.
+- The visual should explain, not decorate: animate the flow, show the data, show the real line of code.
+- Use metaphors when they make an idea click (a bucket filling for batching, a relay race for fallbacks), not as a requirement.
+- Every frame should have something worth looking at. If a line has nothing to show, keep the previous visual and add to it rather than cutting to an almost empty screen.
+- Text must be readable on a laptop: body text 26 px or larger, labels 20 px or larger, and not too much of it at once.
+- Two or three glimpses of real code or real commit messages make the video feel authentic.
 
-## 8. Real code moments
+## Length
 
-Two or three times per video, show the actual thing: the exact line with the magic number, a real commit message, a real diff. Authentic artifacts are more interesting than any diagram, and they prove the video isn't making things up.
+There is no target. The video should be as short as it can be while covering everything the viewer needs, and never so long that it drags. Size it to the material: list the ideas a viewer must leave with, give each what it needs, and cut everything else. A short video people finish beats a thorough one they abandon.
 
-## 9. Highlights
+## Voice
 
-Mark 6–10 lines with `"highlight": true`: the hook, the best reveals, the funniest true facts, the payoff. `scripts/social-cut.mjs` stitches them into a 60–90 s cut for social media. Each highlight should make sense on its own, so pick lines whose visuals are self-explanatory. The `--vertical` version letterboxes the 16:9 frame, so highlights read best when their visuals are big and bold.
-
-## 10. "In retrospect": turning points make it personal
-
-The moments viewers remember most are the decisions: "we built it this way, it didn't work, so we switched to that." A system described only as it is today feels like a tour; the same system told through the forks in the road feels like a story about people.
-
-- For each chapter, look in the research for the road not taken: what this part replaced, what was tried and abandoned, what got reverted.
-- Tell it as a short arc: what they believed then → what broke or changed → what they chose instead → how today's design still carries that lesson.
-- Give the old design its due. It usually made sense at the time; say why, then say what changed.
-- When the viewer's own team made the call, speak as "we". For someone else's project, use the maintainers' own words from PR descriptions and commit messages.
-- One big turning point can carry a whole chapter (e.g. a rewrite of the core data model). Smaller ones make great 20-second asides.
-- Only state a reason if it's written down somewhere. Otherwise say the reason is inferred.
+Text-to-speech sounds flat unless the script is written for it. Short sentences at important moments, longer ones for calm explanation. `pause` (seconds of silence after a line) helps before a key idea lands; `speed` can vary delivery a little (0.92–1.15). Put the key word at the end of the sentence.
 
 ## Fresh-viewer critique
 
-After drafting the script, give it to a subagent with this brief and revise before voicing:
+After drafting the script, give it to a subagent with this brief, and revise before voicing:
 
 ```
 You are a smart engineer who has never seen this codebase. Read this video
-script as if watching it. Report, with line references:
-1. Where you got confused or lost the thread.
-2. Where you got bored (and would scroll away).
-3. Which jokes or reveals landed, and which fell flat.
-4. Whether the opening question was answered clearly at the end.
-5. The one thing you'll remember tomorrow. If that isn't the main point,
-   say so.
-Be blunt. Do not rewrite the script; just critique it.
+script as if watching it. Then answer, with line references:
+1. Explain in your own words how the system works, part by part. Where you
+   can't, the script failed to teach it: say which part.
+2. Which core concepts of the project did it skip or rush? (Check the README.)
+3. Where did you get confused or lose the thread?
+4. Where did you get bored, and which anecdotes felt like trivia rather than
+   explanation?
+5. Did the chapter names tell you what each chapter was about?
+Be blunt. Don't rewrite the script; just critique it.
 ```
