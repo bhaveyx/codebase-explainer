@@ -64,7 +64,7 @@ Text-to-speech sounds flat unless the script is written for it. Short sentences 
 
 ## Fresh-viewer critique
 
-After drafting the script, give it to a subagent with this brief, and revise before voicing:
+After drafting the script, give it to a subagent (on the `sonnet` model is fine) with this brief, and revise before voicing:
 
 ```
 You are a smart engineer who has never seen this codebase. Read this video

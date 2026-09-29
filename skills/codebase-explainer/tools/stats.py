@@ -405,7 +405,7 @@ def cmd_report(args: list[str]) -> None:
     if not session:
         lines += ["", "_Token and cost data unavailable: the session transcript wasn't found under ~/.claude/projects._"]
     else:
-        lines += ["", "_Tokens and cost are read from Claude Code's session transcripts, whose format is internal and can change. Cross-check with `/usage` in the same session._"]
+        lines += ["", "_Tokens and cost are read from Claude Code's session transcripts, which don't record everything Claude Code bills (in one test they showed about 75% of the cost). Treat these as a lower bound; `/usage` in the same session is the authoritative number._"]
     Path("out/STATS.md").write_text("\n".join(lines) + "\n")
 
     card = []

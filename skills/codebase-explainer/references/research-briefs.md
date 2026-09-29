@@ -1,6 +1,8 @@
 # Research briefs
 
-Spawn these in parallel — one per subsystem from the Phase 1 map, plus one history agent. Fill the `{placeholders}`. Each agent must be told the work is **read-only**: no edits, commits, checkouts, or new files inside the target repo.
+Spawn these in parallel: one per subsystem from the Phase 1 map, plus a history agent and a public-context agent. Scale the number of subsystem agents to the codebase: two or three for a small library, up to six for a very large system. Fill the `{placeholders}`. Each agent must be told the work is **read-only**: no edits, commits, checkouts, or new files inside the target repo.
+
+**Run research agents on the `sonnet` model** (pass `model: "sonnet"` when spawning them; the alias always means the current Sonnet). Research is reading and summarising, which Sonnet does well at a fraction of the cost, and it uses up subscription limits much more slowly. Keep the lead agent on the user's model for verification, scripting and judgment.
 
 ## Subsystem brief
 
@@ -12,6 +14,17 @@ Accuracy matters more than anything: cite file:line for every claim and mark
 anything inferred as UNVERIFIED.
 
 Your area: {SUBSYSTEM} — main code in {PATHS}.
+
+How to read (this keeps the research fast and cheap):
+- Find before you read: use grep/rg and file listings to locate what matters,
+  then read only the relevant line ranges (a function, a class, a config
+  block). Don't cat whole files or dump hundreds of lines at once.
+- Everything you read stays in your context and is re-read on every later
+  step, so large reads make every following step slower and more expensive.
+- Aim to finish in about 40 tool calls. If you're past that, write up what
+  you have rather than exploring further.
+- Take notes into your report file as you go, so nothing is lost if you're
+  interrupted.
 
 Answer:
 0. The core concepts a user of this part must understand (names as used in
@@ -33,8 +46,13 @@ Answer:
    believed then, what went wrong or changed, what they chose instead, and
    the PR/commit that shows it. Skip incidents that didn't change the design.
 
-Write a detailed markdown report ending with "10 key takeaways" and an ASCII
-flow diagram to {OUT_DIR}/{slug}.md. Reply with a short summary and the path.
+Write your report to {OUT_DIR}/{slug}.md in two parts:
+1. "## Summary" first, under 800 words: the core concepts, the end-to-end
+   flow, the key numbers with their file:line, and the turning points. This
+   is the part the video is written from.
+2. "## Details" after it, as long as it needs to be, with an ASCII flow
+   diagram and everything else, for looking things up later.
+Reply with a two-line summary and the path.
 ```
 
 ## History brief
@@ -43,6 +61,9 @@ flow diagram to {OUT_DIR}/{slug}.md. Reply with a short summary and the path.
 Reconstruct the evolution of {REPO_PATH} (read-only) for an explainer video:
 eras, big rewrites, features built then removed, architecture pivots, model or
 dependency migrations, cost or performance crises.
+
+Keep reads narrow: use --format options, jq and head to pull only what you need
+rather than dumping full logs or PR bodies. Aim for about 40 tool calls.
 
 Method: skim `git log --format='%ad %s' --date=short` by month; export
 `gh pr list --state all --limit 5000 --json number,title,createdAt,mergedAt,state,additions,deletions`
@@ -58,7 +79,13 @@ design was in each and why it changed; a graveyard table (built, killed, why);
 fun stats (PRs per month, biggest PR, most-churned directory). Cite PR numbers
 and dates for everything; mark guesses UNVERIFIED.
 
-Write to {OUT_DIR}/history.md and reply with a short summary.
+Write your report to {OUT_DIR}/history.md in two parts:
+1. "## Summary" first, under 800 words: the core concepts, the end-to-end
+   flow, the key numbers with their file:line, and the turning points. This
+   is the part the video is written from.
+2. "## Details" after it, as long as it needs to be, with an ASCII flow
+   diagram and everything else, for looking things up later.
+Reply with a two-line summary and the path.
 ```
 
 ## Public-context brief
@@ -87,6 +114,7 @@ Use this for the hook and for framing only. Every claim about how the code works
 
 ## After the agents return
 
-- Read every report in full. Note conflicts between reports and resolve them by reading the source yourself.
+- Read the Summary section of every report, not the whole thing. When you need a detail, grep the report's Details section for it instead of reading it all; this keeps your own context small for the rest of the run.
+- Note conflicts between reports and resolve them by reading the source yourself.
 - Collect every on-screen number into a checklist and verify each one (Phase 3).
 - Keep a short list of "surprises" (security issues, dead code, stale docs) to report to the user separately.

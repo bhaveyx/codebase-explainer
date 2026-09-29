@@ -35,7 +35,7 @@ Read the README, top-level layout, docs/, package manifests and CI config. Produ
 
 ## Phase 2 — Research (parallel)
 
-Spawn one research agent per subsystem, **one history agent, and one public-context agent** (news, reception, rivals, talks and posts by the maintainers, and anything else from outside the code that belongs in the video), all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md) with `{OUT_DIR}` set to the project's `research/` folder. Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
+Spawn research agents **on the `sonnet` model**, following the briefs' reading rules (they keep research quick and cheap): one per subsystem, **one history agent, and one public-context agent** (news, reception, rivals, talks and posts by the maintainers, and anything else from outside the code that belongs in the video), all in parallel, using the briefs in [references/research-briefs.md](references/research-briefs.md) with `{OUT_DIR}` set to the project's `research/` folder. Each writes a report to disk with `file:line` citations and marks anything inferred as `UNVERIFIED`.
 
 The briefs ask for the core concepts a user must understand, the *why* (code comments, PR descriptions, commit messages), concrete numbers (thresholds, limits, model names, timeouts), turning points (what was replaced and why), and a worked example.
 
